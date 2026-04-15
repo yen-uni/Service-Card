@@ -43,7 +43,7 @@ if st.button("✨ 生成更新後的 PDF", type="primary"):
                 text_rect = fitz.Rect(text_x, text_y, text_x + 450, text_y + 150)
                 
                 # ✅ 修正：指定讀取 GitHub 上的字體檔案
-                font_path = "NotoSansTC-Regular.ttf"
+                font_path = "NotoSansTC-VariableFont_wght.ttf"
                 if os.path.exists(font_path):
                     # 將字體註冊進 PDF 並命名為 custom_cjk
                     page.insert_font(fontname="custom_cjk", fontfile=font_path)
