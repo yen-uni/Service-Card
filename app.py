@@ -1,6 +1,6 @@
 import streamlit as st
-import fitz  # PyMuPDF 套件，負責處理 PDF
-import io
+import fitz  # PyMuPDF 套件
+import os
 
 st.set_page_config(page_title="專屬服務紀錄表編輯器", layout="wide")
 
@@ -40,10 +40,18 @@ if st.button("✨ 生成更新後的 PDF", type="primary"):
 
             # 插入文字
             if service_text:
-                # 定義文字框範圍 (x0, y0, x1, y1)
                 text_rect = fitz.Rect(text_x, text_y, text_x + 450, text_y + 150)
-                # 使用 cjk 字體以支援中文顯示
-                page.insert_textbox(text_rect, service_text, fontsize=12, fontname="cjk")
+                
+                # ✅ 修正：指定讀取 GitHub 上的字體檔案
+                font_path = "NotoSansTC-Regular.ttf"
+                if os.path.exists(font_path):
+                    # 將字體註冊進 PDF 並命名為 custom_cjk
+                    page.insert_font(fontname="custom_cjk", fontfile=font_path)
+                    # 使用剛註冊的字體寫入文字
+                    page.insert_textbox(text_rect, service_text, fontsize=12, fontname="custom_cjk")
+                else:
+                    st.error("找不到字體檔案！請確認 NotoSansTC-Regular.ttf 已上傳至 GitHub 的同一層目錄下。")
+                    st.stop()
 
             # 插入印章圖片
             if stamp_file is not None:
